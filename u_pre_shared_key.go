@@ -91,7 +91,9 @@ type PreSharedKeyExtension interface {
 	mustEmbedUnimplementedPreSharedKeyExtension() // this works like a type guard
 }
 
-type UnimplementedPreSharedKeyExtension struct{}
+type UnimplementedPreSharedKeyExtension struct {
+	WriteToUConn func(*UConn) error
+}
 
 func (UnimplementedPreSharedKeyExtension) mustEmbedUnimplementedPreSharedKeyExtension() {}
 
@@ -103,7 +105,11 @@ func (*UnimplementedPreSharedKeyExtension) InitializeByUtls(session *SessionStat
 	panic("tls: Initialize is not implemented for the PreSharedKeyExtension")
 }
 
-func (*UnimplementedPreSharedKeyExtension) writeToUConn(*UConn) error {
+func (u *UnimplementedPreSharedKeyExtension) writeToUConn(uc *UConn) error {
+	if u.WriteToUConn != nil {
+		return u.WriteToUConn(uc)
+	}
+
 	panic("tls: writeToUConn is not implemented for the PreSharedKeyExtension")
 }
 
