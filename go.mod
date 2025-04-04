@@ -1,4 +1,4 @@
-module github.com/bogdanfinn/utls
+module github.com/AlpineAIO/utls
 
 go 1.22.0
 
